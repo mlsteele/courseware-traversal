@@ -1,55 +1,62 @@
 plantTimeout = (cb, ms) -> setTimeout ms, cb
 plantInterval = (cb, ms) -> setInterval ms, cb
+choose = (array) -> array[Math.floor(Math.random() * array.length)]
 
-courseware_old = [
-  name: 'Pset 1'
-  percentage: 0.2
-,
-  name: 'Pset 2'
-  percentage: 0.4
-,
-  name: 'Pset 3'
-  percentage: 0.6
-]
+class CoursePoint
+  constructor: (@name) ->
+
+  move: ({x, y}) ->
+    @.pos =
+      x: x
+      y: y
 
 courseware =
   weeks: [
     name: "Week 1"
-    sections: [
-      "Lec 1"
-      "Lec 2"
-      "Q 2"
-      "Pset 1"
+    course_points: [
+      new CoursePoint "Lec 1"
+      new CoursePoint "Lec 2"
+      new CoursePoint "Q 2"
+      new CoursePoint "Pset 1"
     ]
   ,
     name: "Week 2"
-    sections: [
-      "Lec 3"
-      "Q 2"
-      "Pset 2"
-      "Q 3"
+    course_points: [
+      new CoursePoint "Lec 3"
+      new CoursePoint "Q 2"
+      new CoursePoint "Pset 2"
+      new CoursePoint "Q 3"
     ]
   ,
     name: "Week 3"
-    sections: [
-      "Q 4"
-      "Lec 4"
-      "Pset 3"
+    course_points: [
+      new CoursePoint "Q 4"
+      new CoursePoint "Lec 4"
+      new CoursePoint "Pset 3"
     ]
   ,
     name: "Week 4"
-    sections: [
-      "Lec 5"
-      "Pset 4"
-      "Lec 6"
-      "Lec 7"
+    course_points: [
+      new CoursePoint "Lec 5"
+      new CoursePoint "Pset 4"
+      new CoursePoint "Lec 6"
+      new CoursePoint "Lec 7"
     ]
   ]
+
+extract_coursepoints = (courseware) ->
+  cpoints = []
+  for week in courseware.weeks
+    for cp in week.course_points
+      cpoints.push cp
+  cpoints
+
 
 WIDTH = 700
 HEIGHT = 400
 
 COURSE_WIDTH = WIDTH
+COURSE_LINE_Y = HEIGHT / 2 - 100
 
 stage = new Kinetic.Stage(
   container: "container"
@@ -60,7 +67,7 @@ stage = new Kinetic.Stage(
 layer = new Kinetic.Layer()
 
 courseline = new Kinetic.Line(
-  points: [0, HEIGHT / 2, WIDTH, HEIGHT / 2]
+  points: [0, COURSE_LINE_Y, WIDTH, COURSE_LINE_Y]
   stroke: "black"
   strokeWidth: 6
   lineCap: "square"
@@ -96,16 +103,20 @@ for i_w in [0...courseware.weeks.length]
   )
   layer.add line
 
-  for i_s in [0...week.sections.length]
-    section_name = week.sections[i_s]
-    SECTION_WIDTH = WEEK_WIDTH / week.sections.length
-    section_x = week_x + i_s * SECTION_WIDTH
+  for i_cp in [0...week.course_points.length]
+    coursepoint = week.course_points[i_cp]
+    COURSEPOINT_WIDTH = WEEK_WIDTH / week.course_points.length
+    course_x = week_x + i_cp * COURSEPOINT_WIDTH
+
+    coursepoint.move
+      x: course_x
+      y: HEIGHT / 2 + 20
 
     text = new Kinetic.Text(
-      x: section_x
-      y: HEIGHT / 2 + 20
-      width: SECTION_WIDTH
-      text: section_name
+      x: coursepoint.pos.x
+      y: coursepoint.pos.y
+      width: COURSEPOINT_WIDTH
+      text: coursepoint.name
       fontSize: 12
       fontFamily: 'Helvetica'
       fill: 'black'
@@ -114,32 +125,72 @@ for i_w in [0...courseware.weeks.length]
     layer.add text
 
 
-test_spline = new Kinetic.Spline(
-  points: [
-    x: 0
-    y: HEIGHT / 2
-  ,
-    x: 100
-    y: HEIGHT / 2 - 23
-  ,
-    x: 200
-    y: HEIGHT / 2 - 10
-  ,
-    x: 330
-    y: HEIGHT / 2 - 70
-  ]
-  stroke: "black"
-  strokeWidth: 1
-  lineCap: "round"
-  tension: 0.5
-)
-layer.add test_spline
+# test_student = ->
+#   test_spline = new Kinetic.Spline(
+#     points: [
+#       x: 0
+#       y: HEIGHT / 2 - 100
+#     ,
+#       x: 100
+#       y: HEIGHT / 2 - 23
+#     ,
+#       x: 200
+#       y: HEIGHT / 2 - 10
+#     ,
+#       x: 330
+#       y: HEIGHT / 2 - 70
+#     ]
+#     stroke: "black"
+#     strokeWidth: 1
+#     lineCap: "round"
+#     tension: 0.5
+#   )
 
+
+
+test_course_path = ->
+  cpoints = []
+  for i in [0...5]
+    choose extract_coursepoints courseware
+
+render_course_path = (course_path) ->
+  point_from_cp = (cp) ->
+    x: cp.pos.x
+    y: COURSE_LINE_Y - 10
+
+  points = (point_from_cp cp for cp in course_path)
+
+  path_spline = new Kinetic.Spline(
+    points: points
+    stroke: "black"
+    strokeWidth: 1
+    lineCap: "round"
+    tension: 2
+  )
+  layer.add path_spline
+
+render_course_path test_course_path()
+
+test_student = ->
+  test_spline = new Kinetic.Spline(
+    points: [
+      x: 0
+      y: HEIGHT / 2 - 100
+    ,
+      x: 100
+      y: HEIGHT / 2 - 23
+    ,
+      x: 200
+      y: HEIGHT / 2 - 10
+    ,
+      x: 330
+      y: HEIGHT / 2 - 70
+    ]
+    stroke: "black"
+    strokeWidth: 1
+    lineCap: "round"
+    tension: 0.5
+  )
+
+# layer.add test_student()
 stage.add layer
-
-plantTimeout 200, ->
-  console.log 'appending'
-  test_spline.attrs.points.push
-    x: 100
-    y: 40
-  layer.draw()
