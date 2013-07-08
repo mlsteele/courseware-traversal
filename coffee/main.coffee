@@ -12,39 +12,39 @@ courseware_old = [
   percentage: 0.6
 ]
 
-# courseware =
-#   weeks: [
-#     name: "Week n"
-#     sections: [
-#       "Lec 1"
-#       "Lec 2"
-#       "Q 2"
-#       "Pset 1"
-#     ]
-#   ,
-#     name: "Week n"
-#     sections: [
-#       "Lec 3"
-#       "Q 2"
-#       "Pset 2"
-#       "Q 3"
-#     ]
-#   ,
-#     name: "Week n"
-#     sections: [
-#       "Q 4"
-#       "Lec 4"
-#       "Pset 3"
-#     ","
-#   ]
-#     name: "Week n"
-#     sections: [
-#       "Lec 5"
-#       "Pset 4"
-#       "Lec 6"
-#       "Lec 7"
-#     ]
-#   ]
+courseware =
+  weeks: [
+    name: "Week 1"
+    sections: [
+      "Lec 1"
+      "Lec 2"
+      "Q 2"
+      "Pset 1"
+    ]
+  ,
+    name: "Week 2"
+    sections: [
+      "Lec 3"
+      "Q 2"
+      "Pset 2"
+      "Q 3"
+    ]
+  ,
+    name: "Week 3"
+    sections: [
+      "Q 4"
+      "Lec 4"
+      "Pset 3"
+    ]
+  ,
+    name: "Week 4"
+    sections: [
+      "Lec 5"
+      "Pset 4"
+      "Lec 6"
+      "Lec 7"
+    ]
+  ]
 
 WIDTH = 700
 HEIGHT = 400
@@ -68,18 +68,39 @@ courseline = new Kinetic.Line(
 )
 layer.add courseline
 
-for coursepoint in courseware_old
+for i_w in [0...courseware.weeks.length]
+  week = courseware.weeks[i_w]
+  WEEK_WIDTH = COURSE_WIDTH / courseware.weeks.length
+  week_x = i_w * WEEK_WIDTH
+
   text = new Kinetic.Text(
-    x: COURSE_WIDTH * coursepoint.percentage
-    y: HEIGHT / 2 + 10
-    text: coursepoint.name
+    x: week_x
+    y: HEIGHT / 2 + 50
+    width: WEEK_WIDTH
+    text: week.name
     fontSize: 14
     fontFamily: 'Helvetica'
     fill: 'black'
+    align: 'center'
   )
   layer.add text
 
-  # coursepoint.percentage
+  for i_s in [0...week.sections.length]
+    section_name = week.sections[i_s]
+    SECTION_WIDTH = WEEK_WIDTH / week.sections.length
+    section_x = week_x + i_s * SECTION_WIDTH
+
+    text = new Kinetic.Text(
+      x: section_x
+      y: HEIGHT / 2 + 20
+      width: SECTION_WIDTH
+      text: section_name
+      fontSize: 12
+      fontFamily: 'Helvetica'
+      fill: 'black'
+      align: 'center'
+    )
+    layer.add text
 
 test_spline = new Kinetic.Spline(
   points: [
