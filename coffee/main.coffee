@@ -1,4 +1,7 @@
-courseware = [
+plantTimeout = (cb, ms) -> setTimeout ms, cb
+plantInterval = (cb, ms) -> setInterval ms, cb
+
+courseware_old = [
   name: 'Pset 1'
   percentage: 0.2
 ,
@@ -9,8 +12,42 @@ courseware = [
   percentage: 0.6
 ]
 
-WIDTH = 578
-HEIGHT = 200
+# courseware =
+#   weeks: [
+#     name: "Week n"
+#     sections: [
+#       "Lec 1"
+#       "Lec 2"
+#       "Q 2"
+#       "Pset 1"
+#     ]
+#   ,
+#     name: "Week n"
+#     sections: [
+#       "Lec 3"
+#       "Q 2"
+#       "Pset 2"
+#       "Q 3"
+#     ]
+#   ,
+#     name: "Week n"
+#     sections: [
+#       "Q 4"
+#       "Lec 4"
+#       "Pset 3"
+#     ","
+#   ]
+#     name: "Week n"
+#     sections: [
+#       "Lec 5"
+#       "Pset 4"
+#       "Lec 6"
+#       "Lec 7"
+#     ]
+#   ]
+
+WIDTH = 700
+HEIGHT = 400
 
 COURSE_WIDTH = WIDTH
 
@@ -31,7 +68,7 @@ courseline = new Kinetic.Line(
 )
 layer.add courseline
 
-for coursepoint in courseware
+for coursepoint in courseware_old
   text = new Kinetic.Text(
     x: COURSE_WIDTH * coursepoint.percentage
     y: HEIGHT / 2 + 10
@@ -66,3 +103,10 @@ test_spline = new Kinetic.Spline(
 layer.add test_spline
 
 stage.add layer
+
+plantTimeout 200, ->
+  console.log 'appending'
+  test_spline.attrs.points.push
+    x: 100
+    y: 40
+  layer.draw()
