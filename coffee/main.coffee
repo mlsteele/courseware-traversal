@@ -1,55 +1,68 @@
-console.log 'hello coffeescript main'
+courseware = [
+  name: 'Pset 1'
+  percentage: 0.2
+,
+  name: 'Pset 2'
+  percentage: 0.4
+,
+  name: 'Pset 3'
+  percentage: 0.6
+]
+
+WIDTH = 578
+HEIGHT = 200
+
+COURSE_WIDTH = WIDTH
 
 stage = new Kinetic.Stage(
   container: "container"
-  width: 578
-  height: 200
+  width: WIDTH
+  height: HEIGHT
 )
 
 layer = new Kinetic.Layer()
-rect = new Kinetic.Rect(
-  x: 239
-  y: 75
-  width: 100
-  height: 50
-  fill: "green"
+
+courseline = new Kinetic.Line(
+  points: [0, HEIGHT / 2, WIDTH, HEIGHT / 2]
   stroke: "black"
-  strokeWidth: 4
+  strokeWidth: 6
+  lineCap: "square"
+  lineJoin: "square"
 )
+layer.add courseline
 
-redLine = new Kinetic.Line(
-  points: [73, 70, 340, 23, 450, 60, 500, 20]
-  stroke: "red"
-  strokeWidth: 15
-  lineCap: "round"
-  lineJoin: "round"
-)
+for coursepoint in courseware
+  text = new Kinetic.Text(
+    x: COURSE_WIDTH * coursepoint.percentage
+    y: HEIGHT / 2 + 10
+    text: coursepoint.name
+    fontSize: 14
+    fontFamily: 'Helvetica'
+    fill: 'black'
+  )
+  layer.add text
 
-redSpline = new Kinetic.Spline(
+  # coursepoint.percentage
+
+test_spline = new Kinetic.Spline(
   points: [
-    x: 73
-    y: 160
+    x: 0
+    y: HEIGHT / 2
   ,
-    x: 340
-    y: 23
+    x: 100
+    y: HEIGHT / 2 - 23
   ,
-    x: 500
-    y: 109
+    x: 200
+    y: HEIGHT / 2 - 10
   ,
-    x: 300
-    y: 109
+    x: 330
+    y: HEIGHT / 2 - 70
   ]
-  stroke: "red"
-  strokeWidth: 10
+  stroke: "black"
+  strokeWidth: 3
   lineCap: "round"
   tension: 0.5
 )
+layer.add test_spline
 
-layer.add redLine
-layer.add redSpline
-
-# add the shape to the layer
-layer.add rect
-
-# add the layer to the stage
 stage.add layer
