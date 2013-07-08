@@ -71,11 +71,13 @@ layer.add courseline
 for i_w in [0...courseware.weeks.length]
   week = courseware.weeks[i_w]
   WEEK_WIDTH = COURSE_WIDTH / courseware.weeks.length
+  WEEK_RAD = 30
   week_x = i_w * WEEK_WIDTH
+  week_y = HEIGHT / 2 + 50
 
   text = new Kinetic.Text(
     x: week_x
-    y: HEIGHT / 2 + 50
+    y: week_y
     width: WEEK_WIDTH
     text: week.name
     fontSize: 14
@@ -84,6 +86,15 @@ for i_w in [0...courseware.weeks.length]
     align: 'center'
   )
   layer.add text
+
+  line = new Kinetic.Line(
+    points: [week_x, week_y - WEEK_RAD, week_x, week_y + WEEK_RAD]
+    stroke: "black"
+    strokeWidth: 2
+    lineCap: "square"
+    lineJoin: "square"
+  )
+  layer.add line
 
   for i_s in [0...week.sections.length]
     section_name = week.sections[i_s]
@@ -102,6 +113,7 @@ for i_w in [0...courseware.weeks.length]
     )
     layer.add text
 
+
 test_spline = new Kinetic.Spline(
   points: [
     x: 0
@@ -117,7 +129,7 @@ test_spline = new Kinetic.Spline(
     y: HEIGHT / 2 - 70
   ]
   stroke: "black"
-  strokeWidth: 3
+  strokeWidth: 1
   lineCap: "round"
   tension: 0.5
 )
