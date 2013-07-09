@@ -1,6 +1,7 @@
 plantTimeout = (cb, ms) -> setTimeout ms, cb
 plantInterval = (cb, ms) -> setInterval ms, cb
 choose = (array) -> array[Math.floor(Math.random() * array.length)]
+randrange = (min, max) -> Math.random() * (max - min) + min
 
 class CoursePoint
   constructor: (@name) ->
@@ -153,6 +154,27 @@ test_course_path = ->
   for i in [0...5]
     choose extract_coursepoints courseware
 
+pseudo_random_course_path = ->
+  cpoints_all = extract_coursepoints courseware
+  cpoints = []
+
+  i = 0
+  while i < cpoints_all.length - 1
+    r = Math.random()
+    if r < 0.8
+      i += 1
+    if r < 0.9
+      i += 1
+      i += Math.floor(randrange(1, 3))
+    else
+      i -= Math.floor(randrange(1, 4))
+
+    i = Math.max 0, Math.min i, cpoints_all.length - 1
+    cpoints.push cpoints_all[i]
+
+  cpoints
+
+
 render_course_path = (course_path) ->
   point_from_cp = (cp) ->
     x: cp.pos.x
@@ -163,7 +185,10 @@ render_course_path = (course_path) ->
   points = []
   for [a,b], i in _.zip original_points, original_points[1..]
     if b != undefined
-      avg_x = a.x + b.x / 2
+      if a.x is b.x
+        continue
+
+      avg_x = (a.x + b.x) / 2
       points.push a
 
       y_offset = if a.x > b.x then 1 else -1
@@ -179,14 +204,15 @@ render_course_path = (course_path) ->
     points: points
     stroke: "black"
     # strokeWidth: 0.03
-    strokeWidth: 3 * Math.random()
+    strokeWidth: 5 * Math.random()
+    opacity: 0.5
     lineCap: "round"
-    tension: 0.4
+    tension: 0.3
   )
   layer.add path_spline
 
 for i in [0...10]
-  render_course_path test_course_path()
+  render_course_path pseudo_random_course_path()
 
 test_student = ->
   test_spline = new Kinetic.Spline(
