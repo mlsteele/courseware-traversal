@@ -72,6 +72,19 @@ stage = new Kinetic.Stage(
 
 layer = new Kinetic.Layer()
 
+title = new Kinetic.Text(
+  x: 0
+  y: 20
+  width: WIDTH - 1.5*TICK_PADDING
+  text: "Courseware Traversal"
+  fontSize: 24
+  fontFamily: 'Helvetica'
+  fill: 'black'
+  align: 'center'
+  )
+
+layer.add title
+
 courseline = new Kinetic.Line(
   points: [PADDING, COURSE_LINE_Y, COURSE_WIDTH - PADDING, COURSE_LINE_Y]
   stroke: "blue"
@@ -103,7 +116,7 @@ for i_w in [0...courseware.weeks.length]
   if count != 0
     line = new Kinetic.Line(
       points: [week_x, week_y - WEEK_RAD, week_x, week_y + WEEK_RAD]
-      stroke: "black"
+      stroke: "blue"
       strokeWidth: 5
       lineCap: "round"
       lineJoin: "round"
@@ -198,8 +211,7 @@ pseudo_random_course_path = ->
     if r < 0.8
       i += 1
     if r < 0.9
-      i += 1
-      i += Math.floor(randrange(1, 3))
+      i += Math.floor(randrange(1, 4))
     else
       i -= Math.floor(randrange(1, 4))
 
@@ -211,7 +223,7 @@ pseudo_random_course_path = ->
 
 render_course_path = (course_path) ->
   point_from_cp = (cp) ->
-    x: cp.pos.x
+    x: cp.pos.x + COURSEPOINT_WIDTH/2
     y: COURSE_LINE_Y
 
   original_points = (point_from_cp cp for cp in course_path)
@@ -228,12 +240,12 @@ render_course_path = (course_path) ->
       offset_sign = if a.x > b.x then 1 else -1
       # y_offset_magnitude = (30 + Math.random() * 20)
       y_offset_magnitude = Math.abs(a.x - b.x) / 3
-      random_jiggle = Math.random() * 20
+      random_jiggle = Math.random() * 10
       y_offset = offset_sign * y_offset_magnitude
       points.push
         x: avg_x
-        y: COURSE_LINE_Y + y_offset# + random_jiggle
-      points.push b
+        y: COURSE_LINE_Y + y_offset + random_jiggle
+      # points.push b
 
       # add arrow
       layer.add canvas_arrow
@@ -254,13 +266,13 @@ render_course_path = (course_path) ->
     stroke: "black"
     # strokeWidth: 0.03
     strokeWidth: 5 * Math.random()
-    opacity: 0.5
+    opacity: 0.1
     lineCap: "round"
-    tension: 0.4
+    tension: 0.5
   )
   layer.add path_spline
 
-for i in [0...10]
+for i in [0...100]
   render_course_path pseudo_random_course_path()
 
 test_student = ->
