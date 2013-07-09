@@ -105,9 +105,9 @@ for i_w in [0...courseware.weeks.length]
         x: coursepoint.pos.x + TICK_PADDING,
         y: COURSE_LINE_Y
         radius: 10
-        fill: "black"
-        # stroke: "black"
-        # strokeWidth: 1
+        fill: "white"
+        stroke: "black"
+        strokeWidth: 3
       )
 
       layer.add tickball
@@ -200,8 +200,8 @@ render_course_path = (course_path, n_students) ->
     points: []
     stroke: if colorful then "rgb(#{rand_color()}, #{rand_color()}, #{rand_color()})" else "black"
     # strokeWidth: 0.03
-    strokeWidth: if colorful then n_students / 100 * 20 * Math.random() else 3
-    opacity: if colorful then 0.2 else 0.1
+    strokeWidth: if colorful then n_students / 100 * 12 * Math.random() else 3
+    opacity: if colorful then 0.4 else 0.1
     lineCap: "round"
     tension: 0.5
   )
@@ -258,7 +258,10 @@ render_course_path = (course_path, n_students) ->
       path_spline.moveToTop()
 
       path_spline.attrs.stroke = if colorful then 'black' else 'red'
-      path_spline.attrs.opacity = 1
+      if colorful
+        path_spline.attrs.opacity = 0.7
+      else
+        path_spline.attrs.opacity = 1
       layer.draw()
     path_spline.on 'mouseout', ->
       path_spline.attrs.stroke = previous_stroke
