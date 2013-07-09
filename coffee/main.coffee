@@ -1,4 +1,4 @@
-colorful = false
+colorful = true
 
 plantTimeout = (ms, cb) -> setTimeout cb, ms
 plantInterval = (ms, cb) -> setInterval cb, ms
@@ -47,7 +47,8 @@ layer.add title
 # )
 # layer.add courseline
 
-count = 0
+# render_coureseware_titles = ->
+# count = 0
 for i_w in [0...courseware.weeks.length]
   week = courseware.weeks[i_w]
   WEEK_WIDTH = COURSE_WIDTH / courseware.weeks.length
@@ -76,7 +77,7 @@ for i_w in [0...courseware.weeks.length]
   #   )
   #   layer.add vbar
 
-  count += 1
+  # count += 1
 
   for i_cp in [0...week.course_points.length]
     coursepoint = week.course_points[i_cp]
@@ -99,14 +100,26 @@ for i_w in [0...courseware.weeks.length]
     )
     layer.add text
 
-    tick = new Kinetic.Line(
-      points: [coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y + 10, coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y - 10]
-      stroke: "black"
-      strokeWidth: 1
-      lineCap: "round"
-      lineJoin: "round"
-    )
-    layer.add tick
+    if colorful
+      tickball = new Kinetic.Circle(
+        x: coursepoint.pos.x + TICK_PADDING,
+        y: COURSE_LINE_Y
+        radius: 10
+        fill: "black"
+        # stroke: "black"
+        # strokeWidth: 1
+      )
+
+      layer.add tickball
+    else
+      tick = new Kinetic.Line(
+        points: [coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y + 10, coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y - 10]
+        stroke: "black"
+        strokeWidth: 1
+        lineCap: "round"
+        lineJoin: "round"
+      )
+      layer.add tick
 
 
 # test_student = ->
