@@ -229,9 +229,7 @@ render_course_path = (course_path) ->
   original_points = (point_from_cp cp for cp in course_path)
 
   path_spline = new Kinetic.Spline(
-    points: [
-      {x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 20}
-    ]
+    points: []
     stroke: "black"
     # strokeWidth: 0.03
     strokeWidth: 5 * Math.random()
@@ -272,11 +270,10 @@ render_course_path = (course_path) ->
     else
       path_spline.attrs.points.push a
 
-  path_spline.setPoints path_spline.attrs.points
-  console.log path_spline.attrs.points
-
-  layer.add path_spline
-  # layer.draw()
+  plantTimeout 0, ->
+    path_spline.setPoints path_spline.attrs.points
+    layer.add path_spline
+    layer.draw()
 
 for i in [0...100]
   render_course_path pseudo_random_course_path()
@@ -302,31 +299,31 @@ test_student = ->
     tension: 0.5
   )
 
-test_spline = new Kinetic.Spline(
-  points: [
-    x: 0
-    y: 0
-  ,
-    x: 0
-    y: 0
-  ,
-    x: 1
-    y: 1
-  ]
-  stroke: "black"
-  strokeWidth: 1
-  lineCap: "round"
-  tension: 0.5
-)
-layer.add test_spline
+# test_spline = new Kinetic.Spline(
+#   points: [
+#     x: 0
+#     y: 0
+#   ,
+#     x: 0
+#     y: 0
+#   ,
+#     x: 1
+#     y: 1
+#   ]
+#   stroke: "black"
+#   strokeWidth: 1
+#   lineCap: "round"
+#   tension: 0.5
+# )
+# layer.add test_spline
 
-plantTimeout 500, ->
-  console.log 'foo'
-  # test_spline.attrs.points[1].x = 100
-  test_spline.attrs.points.push
-    x: 100
-    y: 40
-  layer.draw()
+# plantTimeout 500, ->
+#   console.log 'foo'
+#   # test_spline.attrs.points[1].x = 100
+#   test_spline.attrs.points.push
+#     x: 100
+#     y: 40
+#   layer.draw()
 
 # layer.add test_student()
 stage.add layer
