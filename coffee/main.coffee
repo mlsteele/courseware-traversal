@@ -207,6 +207,8 @@ pseudo_random_course_path = ->
 
   i = 0
   while i < cpoints_all.length - 1
+    cpoints.push cpoints_all[i]
+
     r = Math.random()
     if r < 0.8
       i += 1
@@ -216,12 +218,11 @@ pseudo_random_course_path = ->
       i -= Math.floor(randrange(1, 4))
 
     i = Math.max 0, Math.min i, cpoints_all.length - 1
-    cpoints.push cpoints_all[i]
 
   cpoints
 
 
-render_course_path = (course_path) ->
+render_course_path = (course_path, n_students) ->
   point_from_cp = (cp) ->
     x: cp.pos.x + COURSEPOINT_WIDTH/2
     y: COURSE_LINE_Y
@@ -233,7 +234,7 @@ render_course_path = (course_path) ->
     points: []
     stroke: "rgb(#{rand_color()}, #{rand_color()}, #{rand_color()})"
     # strokeWidth: 0.03
-    strokeWidth: 5 * Math.random()
+    strokeWidth: n_students / 100 * 20 * Math.random()
     opacity: 0.2
     lineCap: "round"
     tension: 0.5
@@ -293,7 +294,7 @@ render_course_path = (course_path) ->
     layer.draw()
 
 for i in [0...100]
-  render_course_path pseudo_random_course_path()
+  render_course_path pseudo_random_course_path(), Math.random() * 100
 
 test_student = ->
   test_spline = new Kinetic.Spline(
