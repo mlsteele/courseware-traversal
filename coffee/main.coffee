@@ -228,12 +228,13 @@ render_course_path = (course_path) ->
 
   original_points = (point_from_cp cp for cp in course_path)
 
+  rand_color = -> Math.floor Math.random() * 255
   path_spline = new Kinetic.Spline(
     points: []
-    stroke: "black"
+    stroke: "rgb(#{rand_color()}, #{rand_color()}, #{rand_color()})"
     # strokeWidth: 0.03
     strokeWidth: 5 * Math.random()
-    opacity: 0.1
+    opacity: 0.2
     lineCap: "round"
     tension: 0.5
   )
@@ -265,14 +266,30 @@ render_course_path = (course_path) ->
           x: avg_x - offset_sign * 20
           y: COURSE_LINE_Y + y_offset
         ]
-        opacity: 0.3
+        opacity: 0.2
         strokeWidth: 1
     else
       path_spline.attrs.points.push a
 
-  plantTimeout 0, ->
+  plantTimeout Math.random() * 0, ->
     path_spline.setPoints path_spline.attrs.points
     layer.add path_spline
+
+    previous_color = undefined
+    previous_opacity = undefined
+
+    path_spline.on 'mouseover', ->
+      previous_color = path_spline.attrs.color
+      previous_opacity = path_spline.attrs.opacity
+
+      path_spline.attrs.stroke = 'black'
+      path_spline.attrs.opacity = 1
+      layer.draw()
+    path_spline.on 'mouseout', ->
+      path_spline.attrs.color = previous_color
+      path_spline.attrs.opacity = previous_opacity
+      layer.draw()
+
     layer.draw()
 
 for i in [0...100]
