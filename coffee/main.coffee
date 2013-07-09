@@ -53,11 +53,16 @@ extract_coursepoints = (courseware) ->
   cpoints
 
 
-WIDTH = 700
-HEIGHT = 400
+WIDTH = 1366 #700
+HEIGHT = 700 #400
 
 COURSE_WIDTH = WIDTH - 100
 COURSE_LINE_Y = HEIGHT / 2 - 100
+
+PADDING = 10
+TICK_PADDING = 40
+
+WEEK_RAD = 50
 
 stage = new Kinetic.Stage(
   container: "container"
@@ -68,19 +73,19 @@ stage = new Kinetic.Stage(
 layer = new Kinetic.Layer()
 
 courseline = new Kinetic.Line(
-  points: [0, COURSE_LINE_Y, WIDTH, COURSE_LINE_Y]
+  points: [PADDING, COURSE_LINE_Y, COURSE_WIDTH - PADDING, COURSE_LINE_Y]
   stroke: "blue"
   strokeWidth: 6
-  lineCap: "square"
-  lineJoin: "square"
+  lineCap: "round"
+  lineJoin: "round"
 )
 layer.add courseline
 
+count = 0
 for i_w in [0...courseware.weeks.length]
   week = courseware.weeks[i_w]
   WEEK_WIDTH = COURSE_WIDTH / courseware.weeks.length
-  WEEK_RAD = 30
-  week_x = i_w * WEEK_WIDTH
+  week_x = i_w * WEEK_WIDTH + PADDING
   week_y = HEIGHT / 2 + 50
 
   text = new Kinetic.Text(
@@ -95,14 +100,17 @@ for i_w in [0...courseware.weeks.length]
   )
   layer.add text
 
-  line = new Kinetic.Line(
-    points: [week_x, week_y - WEEK_RAD, week_x, week_y + WEEK_RAD]
-    stroke: "black"
-    strokeWidth: 2
-    lineCap: "square"
-    lineJoin: "square"
-  )
-  layer.add line
+  if count != 0
+    line = new Kinetic.Line(
+      points: [week_x, week_y - WEEK_RAD, week_x, week_y + WEEK_RAD]
+      stroke: "black"
+      strokeWidth: 5
+      lineCap: "round"
+      lineJoin: "round"
+    )
+    layer.add line
+
+  count += 1
 
   for i_cp in [0...week.course_points.length]
     coursepoint = week.course_points[i_cp]
@@ -124,6 +132,15 @@ for i_w in [0...courseware.weeks.length]
       align: 'center'
     )
     layer.add text
+
+    line = new Kinetic.Line(
+      points: [coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y + 10, coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y - 10]
+      stroke: "blue"
+      strokeWidth: 2
+      lineCap: "round"
+      lineJoin: "round"
+    )
+    layer.add line
 
 
 # test_student = ->
