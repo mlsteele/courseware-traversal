@@ -5,55 +5,6 @@ plantInterval = (ms, cb) -> setInterval cb, ms
 choose = (array) -> array[Math.floor(Math.random() * array.length)]
 randrange = (min, max) -> Math.random() * (max - min) + min
 
-class CoursePoint
-  constructor: (@name) ->
-
-  move: ({x, y}) ->
-    @.pos =
-      x: x
-      y: y
-
-courseware =
-  weeks: [
-    name: "Week 1"
-    course_points: [
-      new CoursePoint "Lec 1"
-      new CoursePoint "Lec 2"
-      new CoursePoint "Q 2"
-      new CoursePoint "Pset 1"
-    ]
-  ,
-    name: "Week 2"
-    course_points: [
-      new CoursePoint "Lec 3"
-      new CoursePoint "Q 2"
-      new CoursePoint "Pset 2"
-      new CoursePoint "Q 3"
-    ]
-  ,
-    name: "Week 3"
-    course_points: [
-      new CoursePoint "Q 4"
-      new CoursePoint "Lec 4"
-      new CoursePoint "Pset 3"
-    ]
-  ,
-    name: "Week 4"
-    course_points: [
-      new CoursePoint "Lec 5"
-      new CoursePoint "Pset 4"
-      new CoursePoint "Lec 6"
-      new CoursePoint "Lec 7"
-    ]
-  ]
-
-extract_coursepoints = (courseware) ->
-  cpoints = []
-  for week in courseware.weeks
-    for cp in week.course_points
-      cpoints.push cp
-  cpoints
-
 
 WIDTH = 1366 #700
 HEIGHT = 700 #400
