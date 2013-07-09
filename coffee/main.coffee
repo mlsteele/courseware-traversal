@@ -55,7 +55,7 @@ extract_coursepoints = (courseware) ->
 WIDTH = 700
 HEIGHT = 400
 
-COURSE_WIDTH = WIDTH
+COURSE_WIDTH = WIDTH - 100
 COURSE_LINE_Y = HEIGHT / 2 - 100
 
 stage = new Kinetic.Stage(
@@ -68,7 +68,7 @@ layer = new Kinetic.Layer()
 
 courseline = new Kinetic.Line(
   points: [0, COURSE_LINE_Y, WIDTH, COURSE_LINE_Y]
-  stroke: "black"
+  stroke: "blue"
   strokeWidth: 6
   lineCap: "square"
   lineJoin: "square"
@@ -156,20 +156,37 @@ test_course_path = ->
 render_course_path = (course_path) ->
   point_from_cp = (cp) ->
     x: cp.pos.x
-    y: COURSE_LINE_Y - 10
+    y: COURSE_LINE_Y
 
-  points = (point_from_cp cp for cp in course_path)
+  original_points = (point_from_cp cp for cp in course_path)
+
+  points = []
+  for [a,b], i in _.zip original_points, original_points[1..]
+    if b != undefined
+      avg_x = a.x + b.x / 2
+      points.push a
+
+      y_offset = if a.x > b.x then 1 else -1
+      y_offset *= 30 + Math.random() * 20
+      points.push
+        x: avg_x
+        y: COURSE_LINE_Y + y_offset
+      points.push b
+    else
+      points.push a
 
   path_spline = new Kinetic.Spline(
     points: points
     stroke: "black"
-    strokeWidth: 1
+    # strokeWidth: 0.03
+    strokeWidth: 3 * Math.random()
     lineCap: "round"
-    tension: 2
+    tension: 0.4
   )
   layer.add path_spline
 
-render_course_path test_course_path()
+for i in [0...10]
+  render_course_path test_course_path()
 
 test_student = ->
   test_spline = new Kinetic.Spline(
