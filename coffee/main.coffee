@@ -1,3 +1,5 @@
+colorful = false
+
 plantTimeout = (ms, cb) -> setTimeout cb, ms
 plantInterval = (ms, cb) -> setInterval cb, ms
 choose = (array) -> array[Math.floor(Math.random() * array.length)]
@@ -232,10 +234,10 @@ render_course_path = (course_path, n_students) ->
   rand_color = -> Math.floor Math.random() * 255
   path_spline = new Kinetic.Spline(
     points: []
-    stroke: "rgb(#{rand_color()}, #{rand_color()}, #{rand_color()})"
+    stroke: if colorful then "rgb(#{rand_color()}, #{rand_color()}, #{rand_color()})" else "black"
     # strokeWidth: 0.03
-    strokeWidth: n_students / 100 * 20 * Math.random()
-    opacity: 0.2
+    strokeWidth: if colorful then n_students / 100 * 20 * Math.random() else 3
+    opacity: if colorful then 0.2 else 0.1
     lineCap: "round"
     tension: 0.5
   )
@@ -276,18 +278,19 @@ render_course_path = (course_path, n_students) ->
     path_spline.setPoints path_spline.attrs.points
     layer.add path_spline
 
-    previous_color = undefined
+    previous_stroke = undefined
     previous_opacity = undefined
 
     path_spline.on 'mouseover', ->
-      previous_color = path_spline.attrs.color
+      previous_stroke = path_spline.attrs.stroke
       previous_opacity = path_spline.attrs.opacity
       path_spline.moveToTop()
-      path_spline.attrs.stroke = 'black'
+
+      path_spline.attrs.stroke = if colorful then 'black' else 'red'
       path_spline.attrs.opacity = 1
       layer.draw()
     path_spline.on 'mouseout', ->
-      path_spline.attrs.color = previous_color
+      path_spline.attrs.stroke = previous_stroke
       path_spline.attrs.opacity = previous_opacity
       layer.draw()
 
