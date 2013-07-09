@@ -1,4 +1,4 @@
-colorful = false
+colorful = true
 
 plantTimeout = (ms, cb) -> setTimeout cb, ms
 plantInterval = (ms, cb) -> setInterval cb, ms
@@ -147,7 +147,7 @@ for i_w in [0...courseware.weeks.length]
 
 
 # add key arrows
-KEY_ARROW_Y_OFFSET = 130
+KEY_ARROW_Y_OFFSET = HEIGHT/7
 arrow_common_settings =
   opacity: 1
   strokeWidth: 8
@@ -304,7 +304,7 @@ render_course_path = (course_path, n_students) ->
 
     layer.draw()
 
-for i in [0...1000]
+for i in [0...100]
   render_course_path pseudo_random_course_path(), Math.random() * 100
 
 test_student = ->
