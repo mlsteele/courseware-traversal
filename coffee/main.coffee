@@ -304,8 +304,12 @@ render_course_path = (course_path, n_students) ->
 
     layer.draw()
 
-for i in [0...100]
-  render_course_path pseudo_random_course_path(), Math.random() * 100
+if colorful
+  for i in [0...20]
+    render_course_path pseudo_random_course_path(), Math.random() * 100
+else
+  for i in [0...100]
+    render_course_path pseudo_random_course_path(), Math.random() * 100
 
 test_student = ->
   test_spline = new Kinetic.Spline(
