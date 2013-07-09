@@ -165,6 +165,23 @@ for i_w in [0...courseware.weeks.length]
 #   )
 
 
+canvas_arrow = (options) ->
+  # headlen is the length of the arrow head
+  # points should be an array of 2 points (from, to)
+  # options can also include anything a line knows about
+  # http://stackoverflow.com/questions/15628838/kinetic-js-drawing-arrowhead-at-start-and-end-of-a-line-using-mouse
+  _.defaults options,
+    headlen: 10
+    stroke: 'black'
+
+  [x1, y1] = [options.points[0].x, options.points[0].y]
+  [x2, y2] = [options.points[1].x, options.points[1].y]
+  angle = Math.atan2(y2 - y1, x2 - x1)
+  headlen = options.headlen
+  options.points = [x1, y1, x2, y2, x2 - headlen * Math.cos(angle - Math.PI / 6), y2 - headlen * Math.sin(angle - Math.PI / 6), x2, y2, x2 - headlen * Math.cos(angle + Math.PI / 6), y2 - headlen * Math.sin(angle + Math.PI / 6)]
+
+  new Kinetic.Line options
+
 
 test_course_path = ->
   cpoints = []
@@ -208,12 +225,24 @@ render_course_path = (course_path) ->
       avg_x = (a.x + b.x) / 2
       points.push a
 
-      y_offset = if a.x > b.x then 1 else -1
-      y_offset *= 30 + Math.random() * 20
+      offset_sign = if a.x > b.x then 1 else -1
+      y_offset = offset_sign * (30 + Math.random() * 20)
       points.push
         x: avg_x
         y: COURSE_LINE_Y + y_offset
       points.push b
+
+      # add arrow
+      layer.add canvas_arrow
+        points: [
+          x: avg_x
+          y: COURSE_LINE_Y + y_offset
+        ,
+          x: avg_x - offset_sign * 20
+          y: COURSE_LINE_Y + y_offset
+        ]
+        opacity: 0.3
+        strokeWidth: 1
     else
       points.push a
 
