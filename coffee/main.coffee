@@ -251,7 +251,7 @@ render_course_path = (course_path, n_students) ->
       enable_offset_point = false
       if b.x < a.x
         enable_offset_point = true
-      if b.x - a.x > COURSEPOINT_WIDTH * 2
+      if b.x - a.x > COURSEPOINT_WIDTH
         enable_offset_point = true
 
       if enable_offset_point
