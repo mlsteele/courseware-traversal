@@ -1,5 +1,5 @@
-plantTimeout = (cb, ms) -> setTimeout ms, cb
-plantInterval = (cb, ms) -> setInterval ms, cb
+plantTimeout = (ms, cb) -> setTimeout cb, ms
+plantInterval = (ms, cb) -> setInterval cb, ms
 choose = (array) -> array[Math.floor(Math.random() * array.length)]
 randrange = (min, max) -> Math.random() * (max - min) + min
 
@@ -228,21 +228,32 @@ render_course_path = (course_path) ->
 
   original_points = (point_from_cp cp for cp in course_path)
 
-  points = []
+  path_spline = new Kinetic.Spline(
+    points: [
+      {x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 20}
+    ]
+    stroke: "black"
+    # strokeWidth: 0.03
+    strokeWidth: 5 * Math.random()
+    opacity: 0.1
+    lineCap: "round"
+    tension: 0.5
+  )
+
   for [a,b], i in _.zip original_points, original_points[1..]
     if b != undefined
       if a.x is b.x
         continue
 
       avg_x = (a.x + b.x) / 2
-      points.push a
+      path_spline.attrs.points.push a
 
       offset_sign = if a.x > b.x then 1 else -1
       # y_offset_magnitude = (30 + Math.random() * 20)
       y_offset_magnitude = Math.abs(a.x - b.x) / 3
       random_jiggle = Math.random() * 10
       y_offset = offset_sign * y_offset_magnitude
-      points.push
+      path_spline.attrs.points.push
         x: avg_x
         y: COURSE_LINE_Y + y_offset + random_jiggle
       # points.push b
@@ -259,18 +270,13 @@ render_course_path = (course_path) ->
         opacity: 0.3
         strokeWidth: 1
     else
-      points.push a
+      path_spline.attrs.points.push a
 
-  path_spline = new Kinetic.Spline(
-    points: points
-    stroke: "black"
-    # strokeWidth: 0.03
-    strokeWidth: 5 * Math.random()
-    opacity: 0.1
-    lineCap: "round"
-    tension: 0.5
-  )
+  path_spline.setPoints path_spline.attrs.points
+  console.log path_spline.attrs.points
+
   layer.add path_spline
+  # layer.draw()
 
 for i in [0...100]
   render_course_path pseudo_random_course_path()
@@ -295,6 +301,32 @@ test_student = ->
     lineCap: "round"
     tension: 0.5
   )
+
+test_spline = new Kinetic.Spline(
+  points: [
+    x: 0
+    y: 0
+  ,
+    x: 0
+    y: 0
+  ,
+    x: 1
+    y: 1
+  ]
+  stroke: "black"
+  strokeWidth: 1
+  lineCap: "round"
+  tension: 0.5
+)
+layer.add test_spline
+
+plantTimeout 500, ->
+  console.log 'foo'
+  # test_spline.attrs.points[1].x = 100
+  test_spline.attrs.points.push
+    x: 100
+    y: 40
+  layer.draw()
 
 # layer.add test_student()
 stage.add layer
