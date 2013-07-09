@@ -226,10 +226,13 @@ render_course_path = (course_path) ->
       points.push a
 
       offset_sign = if a.x > b.x then 1 else -1
-      y_offset = offset_sign * (30 + Math.random() * 20)
+      # y_offset_magnitude = (30 + Math.random() * 20)
+      y_offset_magnitude = Math.abs(a.x - b.x) / 3
+      random_jiggle = Math.random() * 20
+      y_offset = offset_sign * y_offset_magnitude
       points.push
         x: avg_x
-        y: COURSE_LINE_Y + y_offset
+        y: COURSE_LINE_Y + y_offset# + random_jiggle
       points.push b
 
       # add arrow
@@ -253,7 +256,7 @@ render_course_path = (course_path) ->
     strokeWidth: 5 * Math.random()
     opacity: 0.5
     lineCap: "round"
-    tension: 0.3
+    tension: 0.4
   )
   layer.add path_spline
 
