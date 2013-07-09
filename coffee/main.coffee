@@ -172,7 +172,7 @@ pseudo_random_course_path = ->
   cpoints = []
 
   i = 0
-  while i < cpoints_all.length - 1
+  while i < cpoints_all.length
     cpoints.push cpoints_all[i]
 
     r = Math.random()
@@ -183,7 +183,7 @@ pseudo_random_course_path = ->
     else
       i -= Math.floor(randrange(1, 4))
 
-    i = Math.max 0, Math.min i, cpoints_all.length - 1
+    i = Math.max 0, Math.min i, cpoints_all.length
 
   cpoints
 
