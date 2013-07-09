@@ -1,4 +1,4 @@
-colorful = true
+colorful = false
 
 plantTimeout = (ms, cb) -> setTimeout cb, ms
 plantInterval = (ms, cb) -> setInterval cb, ms
@@ -6,14 +6,14 @@ choose = (array) -> array[Math.floor(Math.random() * array.length)]
 randrange = (min, max) -> Math.random() * (max - min) + min
 
 
-WIDTH = 1366 #700
-HEIGHT = 700 #400
+WIDTH = 2560
+HEIGHT = 1440
 
 COURSE_WIDTH = WIDTH - 100
 COURSE_LINE_Y = HEIGHT / 2 - 100
 
-PADDING = 10
-TICK_PADDING = 40
+PADDING = WIDTH / 250
+TICK_PADDING = WIDTH/34
 
 WEEK_RAD = 50
 
@@ -30,7 +30,7 @@ title = new Kinetic.Text(
   y: 20
   width: WIDTH - 1.5*TICK_PADDING
   text: "Courseware Traversal"
-  fontSize: 24
+  fontSize: WIDTH/700 * 15
   fontFamily: 'Helvetica'
   fill: 'black'
   align: 'center'
@@ -53,14 +53,14 @@ for i_w in [0...courseware.weeks.length]
   week = courseware.weeks[i_w]
   WEEK_WIDTH = COURSE_WIDTH / courseware.weeks.length
   week_x = i_w * WEEK_WIDTH + PADDING
-  week_y = HEIGHT / 2 + 50
+  week_y = 70*(HEIGHT / 100)
 
   text = new Kinetic.Text(
     x: week_x
     y: week_y
     width: WEEK_WIDTH
     text: week.name
-    fontSize: 14
+    fontSize: WIDTH/100
     fontFamily: 'Helvetica'
     fill: 'black'
     align: 'center'
@@ -86,14 +86,14 @@ for i_w in [0...courseware.weeks.length]
 
     coursepoint.move
       x: course_x
-      y: HEIGHT / 2 + 20
+      y: 65*(HEIGHT / 100)
 
     text = new Kinetic.Text(
       x: coursepoint.pos.x
       y: coursepoint.pos.y
       width: COURSEPOINT_WIDTH
       text: coursepoint.name
-      fontSize: 12
+      fontSize: WIDTH/150
       fontFamily: 'Helvetica'
       fill: 'black'
       align: 'center'
@@ -270,7 +270,7 @@ render_course_path = (course_path, n_students) ->
 
     layer.draw()
 
-for i in [0...100]
+for i in [0...1000]
   render_course_path pseudo_random_course_path(), Math.random() * 100
 
 test_student = ->
