@@ -38,14 +38,14 @@ title = new Kinetic.Text(
 
 layer.add title
 
-courseline = new Kinetic.Line(
-  points: [PADDING, COURSE_LINE_Y, COURSE_WIDTH - PADDING, COURSE_LINE_Y]
-  stroke: "blue"
-  strokeWidth: 6
-  lineCap: "round"
-  lineJoin: "round"
-)
-layer.add courseline
+# courseline = new Kinetic.Line(
+#   points: [PADDING, COURSE_LINE_Y, COURSE_WIDTH - PADDING, COURSE_LINE_Y]
+#   stroke: "blue"
+#   strokeWidth: 6
+#   lineCap: "round"
+#   lineJoin: "round"
+# )
+# layer.add courseline
 
 count = 0
 for i_w in [0...courseware.weeks.length]
@@ -66,15 +66,15 @@ for i_w in [0...courseware.weeks.length]
   )
   layer.add text
 
-  if count != 0
-    line = new Kinetic.Line(
-      points: [week_x, week_y - WEEK_RAD, week_x, week_y + WEEK_RAD]
-      stroke: "blue"
-      strokeWidth: 5
-      lineCap: "round"
-      lineJoin: "round"
-    )
-    layer.add line
+  # if count != 0
+  #   vbar = new Kinetic.Line(
+  #     points: [week_x, week_y - WEEK_RAD, week_x, week_y + WEEK_RAD]
+  #     stroke: "blue"
+  #     strokeWidth: 5
+  #     lineCap: "round"
+  #     lineJoin: "round"
+  #   )
+  #   layer.add vbar
 
   count += 1
 
@@ -99,14 +99,14 @@ for i_w in [0...courseware.weeks.length]
     )
     layer.add text
 
-    line = new Kinetic.Line(
+    tick = new Kinetic.Line(
       points: [coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y + 10, coursepoint.pos.x + TICK_PADDING, COURSE_LINE_Y - 10]
-      stroke: "blue"
-      strokeWidth: 2
+      stroke: "black"
+      strokeWidth: 1
       lineCap: "round"
       lineJoin: "round"
     )
-    layer.add line
+    layer.add tick
 
 
 # test_student = ->
@@ -165,7 +165,7 @@ pseudo_random_course_path = ->
     r = Math.random()
     if r < 0.8
       i += 1
-    if r < 0.9
+    else if r < 0.9
       i += Math.floor(randrange(1, 4))
     else
       i -= Math.floor(randrange(1, 4))
@@ -177,7 +177,7 @@ pseudo_random_course_path = ->
 
 render_course_path = (course_path, n_students) ->
   point_from_cp = (cp) ->
-    x: cp.pos.x + COURSEPOINT_WIDTH/2
+    x: cp.pos.x + COURSEPOINT_WIDTH / 2
     y: COURSE_LINE_Y
 
   original_points = (point_from_cp cp for cp in course_path)
@@ -198,30 +198,37 @@ render_course_path = (course_path, n_students) ->
       if a.x is b.x
         continue
 
-      avg_x = (a.x + b.x) / 2
       path_spline.attrs.points.push a
 
-      offset_sign = if a.x > b.x then 1 else -1
-      # y_offset_magnitude = (30 + Math.random() * 20)
-      y_offset_magnitude = Math.abs(a.x - b.x) / 3
-      random_jiggle = Math.random() * 10
-      y_offset = offset_sign * y_offset_magnitude
-      path_spline.attrs.points.push
-        x: avg_x
-        y: COURSE_LINE_Y + y_offset + random_jiggle
-      # points.push b
+      # only jump if skipped or going backwards.
+      enable_offset_point = false
+      if b.x < a.x
+        enable_offset_point = true
+      if b.x - a.x > COURSEPOINT_WIDTH * 2
+        enable_offset_point = true
 
-      # add arrow
-      layer.add canvas_arrow
-        points: [
+      if enable_offset_point
+        avg_x = (a.x + b.x) / 2
+        offset_sign = if a.x > b.x then 1 else -1
+        # y_offset_magnitude = (30 + Math.random() * 20)
+        y_offset_magnitude = Math.abs(a.x - b.x) / 3
+        random_jiggle = Math.random() * 10
+        y_offset = offset_sign * y_offset_magnitude
+        path_spline.attrs.points.push
           x: avg_x
-          y: COURSE_LINE_Y + y_offset
-        ,
-          x: avg_x - offset_sign * 20
-          y: COURSE_LINE_Y + y_offset
-        ]
-        opacity: 0.2
-        strokeWidth: 1
+          y: COURSE_LINE_Y + y_offset + random_jiggle
+
+        # add arrow
+        layer.add canvas_arrow
+          points: [
+            x: avg_x
+            y: COURSE_LINE_Y + y_offset
+          ,
+            x: avg_x - offset_sign * 20
+            y: COURSE_LINE_Y + y_offset
+          ]
+          opacity: 0.2
+          strokeWidth: 1
     else
       path_spline.attrs.points.push a
 
