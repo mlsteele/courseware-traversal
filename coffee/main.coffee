@@ -282,7 +282,7 @@ render_course_path = (course_path, n_students) ->
     path_spline.on 'mouseover', ->
       previous_color = path_spline.attrs.color
       previous_opacity = path_spline.attrs.opacity
-
+      path_spline.moveToTop()
       path_spline.attrs.stroke = 'black'
       path_spline.attrs.opacity = 1
       layer.draw()
