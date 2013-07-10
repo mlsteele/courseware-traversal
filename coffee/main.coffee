@@ -29,8 +29,10 @@ canvas_arrow = (layer, options) ->
     options.points = line
     layer.add new Kinetic.Line options
 
-WIDTH = 2560
-HEIGHT = 1440
+# WIDTH = 2560
+# HEIGHT = 1440
+WIDTH = 2560 / 2
+HEIGHT = 1440 / 2
 
 COURSE_WIDTH = WIDTH - 100
 COURSE_LINE_Y = HEIGHT / 2 - 100
