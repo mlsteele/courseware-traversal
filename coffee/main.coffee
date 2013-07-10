@@ -1,4 +1,8 @@
 colorful = true
+if purl(window.location.href).param('colorful') is 'false'
+  colorful = false
+
+console.log "add ?colorful=false for non-color version"
 
 plantTimeout = (ms, cb) -> setTimeout cb, ms
 plantInterval = (ms, cb) -> setInterval cb, ms
